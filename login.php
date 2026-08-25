@@ -1,9 +1,62 @@
 <?php
+
 session_start();
+
+require_once __DIR__ . '/config/database.php';
+
+$error = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    $username = trim($_POST['username'] ?? '');
+    $password = $_POST['password'] ?? '';
+
+    if ($username === '' || $password === '') {
+
+        $error = 'Please enter your username and password.';
+
+    } else {
+
+        $stmt = $pdo->prepare("
+            SELECT id, full_name, username, password, role, status
+            FROM users
+            WHERE username = ?
+            LIMIT 1
+        ");
+
+        $stmt->execute([$username]);
+
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (
+            $user &&
+            $user['status'] === 'Active' &&
+            password_verify($password, $user['password'])
+        ) {
+
+            session_regenerate_id(true);
+
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['full_name'] = $user['full_name'];
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['role'] = $user['role'];
+
+            header("Location: admin/dashboard.php");
+            exit;
+
+        } else {
+
+            $error = 'Invalid username or password.';
+
+        }
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
     <meta charset="UTF-8">
@@ -44,6 +97,21 @@ session_start();
 
             </div>
 
+            <?php if ($error): ?>
+
+                <div style="
+                    background:#f8d7da;
+                    color:#842029;
+                    padding:12px;
+                    border-radius:8px;
+                    margin-bottom:20px;
+                    font-size:14px;
+                ">
+                    <?= htmlspecialchars($error) ?>
+                </div>
+
+            <?php endif; ?>
+
 
             <form method="POST" action="login.php">
 
@@ -59,6 +127,7 @@ session_start();
                         name="username"
                         class="form-control"
                         placeholder="Enter your username"
+                        autocomplete="username"
                         required
                     >
 
@@ -77,6 +146,7 @@ session_start();
                         name="password"
                         class="form-control"
                         placeholder="Enter your password"
+                        autocomplete="current-password"
                         required
                     >
 
@@ -94,9 +164,7 @@ session_start();
 
 
             <div class="login-footer">
-
                 Inventory Management System
-
             </div>
 
         </div>
@@ -106,4 +174,5 @@ session_start();
 </div>
 
 </body>
+
 </html>
