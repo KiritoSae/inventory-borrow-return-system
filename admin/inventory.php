@@ -61,16 +61,27 @@ $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <thead>
 
                     <tr>
+
                         <th>Item Code</th>
+
                         <th>Item</th>
+
                         <th>Category</th>
+
                         <th>Serial Number</th>
+
                         <th>Location</th>
+
                         <th>Condition</th>
+
                         <th>Status</th>
+
+                        <th>QR</th>
+
                     </tr>
 
                 </thead>
+
 
                 <tbody>
 
@@ -81,36 +92,60 @@ $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <tr>
 
                             <td>
+
                                 <strong>
-                                    <?= htmlspecialchars($item['item_code']) ?>
+                                    <?= htmlspecialchars(
+                                        $item['item_code']
+                                    ) ?>
                                 </strong>
+
                             </td>
 
-                            <td>
-                                <?= htmlspecialchars($item['item_name']) ?>
-                            </td>
 
                             <td>
-                                <?= htmlspecialchars($item['category_name']) ?>
+
+                                <?= htmlspecialchars(
+                                    $item['item_name']
+                                ) ?>
+
                             </td>
 
+
                             <td>
+
+                                <?= htmlspecialchars(
+                                    $item['category_name']
+                                ) ?>
+
+                            </td>
+
+
+                            <td>
+
                                 <?= htmlspecialchars(
                                     $item['serial_number'] ?: '—'
                                 ) ?>
+
                             </td>
 
+
                             <td>
+
                                 <?= htmlspecialchars(
                                     $item['location'] ?: '—'
                                 ) ?>
+
                             </td>
 
+
                             <td>
+
                                 <?= htmlspecialchars(
                                     $item['item_condition']
                                 ) ?>
+
                             </td>
+
 
                             <td>
 
@@ -118,11 +153,15 @@ $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                 $statusClass = 'status-available';
 
-                                if ($item['status'] === 'Borrowed') {
+                                if (
+                                    $item['status'] === 'Borrowed'
+                                ) {
                                     $statusClass = 'status-borrowed';
                                 }
 
-                                if ($item['status'] === 'Maintenance') {
+                                if (
+                                    $item['status'] === 'Maintenance'
+                                ) {
                                     $statusClass = 'status-maintenance';
                                 }
 
@@ -134,9 +173,33 @@ $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                 ?>
 
-                                <span class="status <?= $statusClass ?>">
-                                    <?= htmlspecialchars($item['status']) ?>
+                                <span
+                                    class="status <?= $statusClass ?>"
+                                >
+                                    <?= htmlspecialchars(
+                                        $item['status']
+                                    ) ?>
                                 </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <a
+                                    href="../qr/generate.php?id=<?= $item['id'] ?>"
+                                    target="_blank"
+                                    class="btn"
+                                    style="
+                                        width:auto;
+                                        text-decoration:none;
+                                        background:#e8f5e9;
+                                        color:#198754;
+                                        padding:8px 12px;
+                                    "
+                                >
+                                    QR
+                                </a>
 
                             </td>
 
@@ -144,11 +207,15 @@ $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                     <?php endforeach; ?>
 
+
                 <?php else: ?>
 
                     <tr>
 
-                        <td colspan="7" style="text-align:center;">
+                        <td
+                            colspan="8"
+                            style="text-align:center;"
+                        >
                             No inventory items found.
                         </td>
 
