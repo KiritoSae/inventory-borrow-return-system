@@ -385,7 +385,28 @@ function showItem(item) {
                 item.status
             )}
         </p>
+${item.status === 'Available'
+    ? `
+        <div style="margin-top:20px;">
 
+            <a
+                href="../borrower/borrow.php?id=${item.id}"
+                style="
+                    display:inline-block;
+                    background:#198754;
+                    color:white;
+                    padding:12px 25px;
+                    border-radius:8px;
+                    text-decoration:none;
+                "
+            >
+                Borrow This Item
+            </a>
+
+        </div>
+    `
+    : ''
+}
     `;
 
 }
