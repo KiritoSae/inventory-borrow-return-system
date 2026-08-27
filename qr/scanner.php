@@ -405,6 +405,26 @@ ${item.status === 'Available'
 
         </div>
     `
+    : item.status === 'Borrowed'
+    ? `
+        <div style="margin-top:20px;">
+
+            <a
+                href="../borrower/return.php?id=${item.id}"
+                style="
+                    display:inline-block;
+                    background:#dc3545;
+                    color:white;
+                    padding:12px 25px;
+                    border-radius:8px;
+                    text-decoration:none;
+                "
+            >
+                Return This Item
+            </a>
+
+        </div>
+    `
     : ''
 }
     `;
